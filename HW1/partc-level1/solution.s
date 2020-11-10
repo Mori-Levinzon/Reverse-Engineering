@@ -1,6 +1,10 @@
 main:
+        lea     ecx, [esp+4]
+        and     esp, -16
+        push    DWORD PTR [ecx-4]
         push    ebp
         mov     ebp, esp
+		push    ecx
 		
 		push 0x0
 		push 0x41797261
@@ -52,15 +56,17 @@ main:
 		add esp, 0x08
 		
 		mov edi, eax
+		
 
-        push    ecx
+        
         sub     esp, 68
         mov     DWORD PTR [ebp-12], 0
         mov     DWORD PTR [ebp-16], 0
         mov     DWORD PTR [ebp-20], 0
         mov     DWORD PTR [ebp-24], 0
         mov     DWORD PTR [ebp-28], 0
-        mov     DWORD PTR [ebp-44], 2126629
+        mov     WORD PTR [ebp-43], 29477
+        mov     BYTE PTR [ebp-41], 0
 L7:
         sub     esp, 8
         lea     eax, [ebp-40]
@@ -116,10 +122,12 @@ L2:
         push    DWORD PTR [ebp-12]
         lea     eax, [ebp-68]
         push    eax
-        call    esi
+        call    esi 
         add     esp, 32
         mov     eax, 0
-        pop ebp
+        mov     ecx, DWORD PTR [ebp-4]
+        leave
+        lea     esp, [ecx-4]
         ret
 FindFunction:
 
