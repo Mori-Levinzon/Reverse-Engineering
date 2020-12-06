@@ -1,0 +1,17 @@
+WIZARD SAFE INPUT:
+80000000
+146 -1 182
+YwlBu.\srCL7!bdP)E?JG[K hacked this
+ 4 0 1 7 2 11 3 5 8 10 6 9
+
+WIZARD SAFE Output:
+The hashed password is: 5832872972622C7325e32c0e51F6FA7E
+
+
+GOBLIN SAFE INPUT:
+E8 CA FE FF FF
+NULL
+KNALLGPALBKBMOLJIAILKNALLGPALBKBMOLJ
+
+goblin SAFE Output:
+The encryption params are 64 (rounds) and 120485897 (delta)
