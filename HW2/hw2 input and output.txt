@@ -1,17 +1,30 @@
 WIZARD SAFE INPUT:
+
 80000000
 146 -1 182
 YwlBu.\srCL7!bdP)E?JG[K hacked this
  4 0 1 7 2 11 3 5 8 10 6 9
 
-WIZARD SAFE Output:
 The hashed password is: 5832872972622C7325e32c0e51F6FA7E
 
+GIANT SAFE INPUT:
 
-GOBLIN SAFE INPUT:
 E8 CA FE FF FF
 NULL
 KNALLGPALBKBMOLJIAILKNALLGPALBKBMOLJ
 
-goblin SAFE Output:
+GIANT SAFE Output:
 The encryption params are 64 (rounds) and 120485897 (delta)
+
+
+GOBLIN: 
+The encryption super secret key is 3Ur(^AH?g86H54#~
+
+
+FINAL:
+INSERT TWO CONCTATE STRING FROM CMD:
+
+F7MDIM9CWZ3IQYH9
+
+Sheep SAFE Output:
+N4N0IPXRAM -C1

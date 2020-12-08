@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/Mor Levinzon/Desktop/RE2/sheepResolver.cpp
+iostream
+-
+string
+-
+bits/stdc++.h
+-
+cstdio
+-
+synchapi.h
+-
+processthreadsapi.h
+-
+rpc.h
+-
+
