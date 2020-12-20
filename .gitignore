@@ -23,24 +23,24 @@
 *.lo
 
 # Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
+#*.dll
+#*.so
+#*.so.*
+#*.dylib
 
 # Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
+#*.exe
+#*.out
+#*.app
+#*.i*86
+#*.x86_64
+#*.hex
 
 # Debug files
-*.dSYM/
-*.su
-*.idb
-*.pdb
+#*.dSYM/
+#*.su
+#*.idb
+#*.pdb
 
 # Kernel Module Compile Results
 *.mod*
