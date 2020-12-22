@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Projects/Reverse-Engineering/HW3/part1/keygen_rev/keygen_rev.cpp
+iostream
+-
+string
+-
+fstream
+-
+cstring
+-
+
