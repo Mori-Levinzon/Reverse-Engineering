@@ -1,0 +1,9 @@
+﻿  pch.cpp
+  clientHook.cpp
+C:\Projects\Reverse-Engineering\HW3\part2\ClientHook\ClientHook\Client\clientHook.cpp(48,11): warning C4244: 'initializing': conversion from 'unsigned long' to 'char', possible loss of data
+C:\Projects\Reverse-Engineering\HW3\part2\ClientHook\ClientHook\Client\clientHook.cpp(62,9): warning C4477: 'printf' : format string '%s' requires an argument of type 'char *', but variadic argument 1 has type 'std::string'
+C:\Projects\Reverse-Engineering\HW3\part2\ClientHook\ClientHook\Client\clientHook.cpp(65,20): warning C4018: '<': signed/unsigned mismatch
+C:\Projects\Reverse-Engineering\HW3\part2\ClientHook\ClientHook\Client\clientHook.cpp(89,10): warning C4018: '<': signed/unsigned mismatch
+C:\Projects\Reverse-Engineering\HW3\part2\ClientHook\ClientHook\Client\clientHook.cpp(106,9): warning C4477: 'printf' : format string '%s' requires an argument of type 'char *', but variadic argument 1 has type 'std::string'
+C:\Projects\Reverse-Engineering\HW3\part2\ClientHook\ClientHook\Client\clientHook.cpp(110,9): warning C4477: 'printf' : format string '%s' requires an argument of type 'char *', but variadic argument 1 has type 'std::string'
+  Client.vcxproj -> C:\Projects\Reverse-Engineering\HW3\part2\ClientHook\ClientHook\Debug\Client.dll

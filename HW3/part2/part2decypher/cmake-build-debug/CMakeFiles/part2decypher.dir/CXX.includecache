@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Projects/Reverse-Engineering/HW3/part2/part2decypher/main.cpp
+iostream
+-
+string
+-
+fstream
+-
+cstring
+-
+synchapi.h
+-
+
