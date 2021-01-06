@@ -109,6 +109,7 @@ int main() {
             "4767+8626K6965+9";
 
 
+    cout << (input) << endl;
     cout << decypherMessage(input) << endl;
 
     return 0;

@@ -1,74 +1,74 @@
+// Hooking template @Michael Ezra. Good luck in the test :)
 #include <windows.h>
 #include <stdio.h>
 #include <tlhelp32.h>
 #include <Shlwapi.h>
 
-LPSTR DLL_PATH;
-//#define DLL_PATH "ColorDll.dll"
+#define DLL_PATH "client.dll"
 #define true 1
 #define false 0
 
 
-BOOL dllInjector(const char* dllpath, DWORD pID);
+BOOL dllInjector(char* dllpath, DWORD pID);
 
 
 int main(int argc, char** argv)
 {
 
-    // Create Process SUSPENDED
-    PROCESS_INFORMATION pi;
-    STARTUPINFOA Startup;
-    ZeroMemory(&Startup, sizeof(Startup));
-    ZeroMemory(&pi, sizeof(pi));
-    // get the command line argument of the current process
-    //LPSTR lpCmdLine = GetCommandLineA();
-    if (argc < 3) {
-        printf("Usage: %s prog_name dll_name\n", argv[0]);
-        return 1;
-    }
+	// Create Process in SUSPENDED mode.
+	PROCESS_INFORMATION pi;
+	STARTUPINFOA Startup;
+	ZeroMemory(&Startup, sizeof(Startup)); //fill block with zeros
+	ZeroMemory(&pi, sizeof(pi)); //fill block with zeros
 
-    LPSTR lpCmdLine = (LPSTR)argv[1];
-    DLL_PATH = (LPSTR)argv[2];
+	//create a process from a PE path (suspended mode).
+	LPSTR argument = (LPSTR)"client.exe DMSG";
+	CreateProcessA(NULL, argument, NULL, NULL, NULL, CREATE_SUSPENDED, NULL, NULL, &Startup, &pi);
 
-    printf("opening process %s\n", lpCmdLine);
-    if (CreateProcessA(lpCmdLine, NULL, NULL, NULL, NULL, CREATE_SUSPENDED, NULL, NULL, &Startup, &pi) == FALSE) {
-        printf("couldnt open process %s\n", lpCmdLine);
-        return 1;
-    }
+	//Inject the dll (pi = process id. DLL_PATH - Dll's name. 
+	if (!(dllInjector((char*)DLL_PATH, pi.dwProcessId))) //pi - process object
+		return 1;
 
-    if (!(dllInjector(DLL_PATH, pi.dwProcessId))) {
-        printf("couldnt inject dll");
-        return 1;
-    }
 
-    Sleep(1000); // Let the DLL finish loading
-    ResumeThread(pi.hThread);
-    printf("Injected dll successfully\n");
-    return 0;
+	//run the process
+	Sleep(1000);
+	ResumeThread(pi.hThread);
+	return 0;
 }
 
-BOOL dllInjector(const char* dllpath, DWORD pID)
+/*
+@param dllpath - dll to inject.
+@pID - identification of the target procees to inject to.
+
+@return False on failure, True otherwise.
+*/
+BOOL dllInjector(char* dllpath, DWORD pID)
 {
-    HANDLE pHandle;
-    LPVOID remoteString;
-    LPVOID remoteLoadLib;
+	HANDLE pHandle;
+	LPVOID remoteString;
+	LPVOID remoteLoadLib;
 
-    pHandle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pID);
+	// Get a handler to the target process.
+	pHandle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pID);
 
-    if (!pHandle) {
-        printf("couldnt open proccess with perms\n");
-        return false;
-    }
+	if (!pHandle) //error checking
+		return false;
 
+	//find the address of dll's loading function (LoadLibaryA at Kernel32.dll).
+	//We search the function on the current process, but the address should not be different in the target process.
+	remoteLoadLib = (LPVOID)GetProcAddress(GetModuleHandle(L"kernel32.dll"), "LoadLibraryA");
 
-    remoteLoadLib = (LPVOID)GetProcAddress(GetModuleHandle(L"kernel32.dll"), "LoadLibraryA");
+	// Copy dll's path string to the target process's memory space.
+	remoteString = (LPVOID)VirtualAllocEx(pHandle, NULL, strlen(DLL_PATH), MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+	WriteProcessMemory(pHandle, (LPVOID)remoteString, dllpath, strlen(dllpath), NULL);
 
-    remoteString = (LPVOID)VirtualAllocEx(pHandle, NULL, strlen(DLL_PATH) + 1, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
-    WriteProcessMemory(pHandle, (LPVOID)remoteString, dllpath, strlen(dllpath), NULL);
-    if (NULL == CreateRemoteThread(pHandle, NULL, NULL, (LPTHREAD_START_ROUTINE)remoteLoadLib, (LPVOID)remoteString, NULL, NULL)) {
-        return false;
-    }
-    CloseHandle(pHandle);
+	//Create sub remote thread at the target process, to execute LoadLibaryA function on the target process.
+	if (NULL == CreateRemoteThread(pHandle, NULL, NULL, (LPTHREAD_START_ROUTINE)remoteLoadLib, (LPVOID)remoteString, NULL, NULL)) {
+		return false; //error checking
+	}
 
-    return true;
+	//Close the handle! (This doesn't terminate the process)
+	CloseHandle(pHandle);
+
+	return true;
 }

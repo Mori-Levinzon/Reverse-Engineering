@@ -1,4 +1,3 @@
 dll attached
 changing IAT entry
 IAT address: 0040A2AC
-success

@@ -1,9 +1,0 @@
-﻿  dllHook.cpp
-C:\Users\michaelezra\Desktop\dllHook\dllHook\dllHook.cpp(254,20): warning C4018: '<': signed/unsigned mismatch
-C:\Users\michaelezra\Desktop\dllHook\dllHook\dllHook.cpp(256,21): warning C4309: '=': truncation of constant value
-C:\Users\michaelezra\Desktop\dllHook\dllHook\dllHook.cpp(276,20): warning C4018: '<': signed/unsigned mismatch
-C:\Users\michaelezra\Desktop\dllHook\dllHook\dllHook.cpp(329,16): warning C4309: '=': truncation of constant value
-C:\Users\michaelezra\Desktop\dllHook\dllHook\dllHook.cpp(330,20): warning C4309: '=': truncation of constant value
-  dllmain.cpp
-  Generating Code...
-  dllHook.vcxproj -> C:\Users\michaelezra\Desktop\dllHook\Debug\dllHook.dll
