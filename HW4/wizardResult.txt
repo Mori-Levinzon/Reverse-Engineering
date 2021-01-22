@@ -1,0 +1,19 @@
+Enter username: wizard
+Enter password: MQGIEPLXK91FLL2Y
+Welcome wizard
+
+What would you like to do?
+[1] ECHO - ping the server with a custom message, receive the same.
+[2] TIME - Get local time from server point of view.
+[3] 2020 - Get a a new year greeting.
+[4] USER - Show details of registered users.
+[5] DMSG - Download message from the server.
+your choice (4 letters command code): USER
+
+--------------------|--------------------|--------------------|--------------------|
+Username            |Full Name           |Focus               |Pass Hint           |
+--------------------|--------------------|--------------------|--------------------|
+uWizard             |Vincent Smith       |knights             |Im good             |
+uGoblin             |Sean Miller         |robber              |3P87QYPTTKTP153D    |
+uGiant              |William Collins     |resources           |hint here..         |
+uArcher             |Classified          |management          |/sh tar -a link     |

@@ -1,0 +1,21 @@
+Enter username: archer
+Enter password: S43U0SE6NZ4S46S5
+Welcome archer (Admin)
+
+What would you like to do?
+[1] ECHO - ping the server with a custom message, receive the same.
+[2] TIME - Get local time from server point of view.
+[3] 2020 - Get a a new year greeting.
+[4] USER - Show details of registered users.
+[5] DMSG - Download message from the server.
+[6] PEEK - peek into the system.
+[7] LOAD - Load the content of the last peeked file.
+your choice (4 letters command code): USER
+
+--------------------|--------------------|--------------------|--------------------|
+Username            |Full Name           |Focus               |Pass Hint           |
+--------------------|--------------------|--------------------|--------------------|
+uWizard             |Vincent Smith       |knights             |Im good             |
+uGoblin             |Sean Miller         |robber              |3P87QYPTTKTP153D    |
+uGiant              |William Collins     |resources           |hint here..         |
+uArcher             |Classified          |management          |/sh tar -a link     |
