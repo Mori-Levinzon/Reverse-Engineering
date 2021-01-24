@@ -1,0 +1,4 @@
+archer
+S43U0SE6NZ4S46S5
+PEEK
+"config\attack.config ;  echo 'Fires: False\nRivals: True\nKnights Infected: False\nRobber Hunted: True' > config\attack.config"
