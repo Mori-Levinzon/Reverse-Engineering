@@ -1,0 +1,2 @@
+echo 'Fires: False\nRivals: True\nKnights Infected: False\nRobber Hunted: True' > config\attack.config
+exit

